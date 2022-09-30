@@ -3,7 +3,6 @@
 #include <string>
 #include <cmath>
 #include <limits>
-#include <regex>
 bool safe_inp(double *arr[], int len, double err){
     double n;
     bool rs = true;

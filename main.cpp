@@ -3,7 +3,9 @@
 #include <string>
 #include <cmath>
 #include <limits>
-bool safe_inp(double *arr[], int len, double err){
+#include <regex>
+
+bool safe_inp(double* arr[], int len, double err) {
     double n;
     bool rs = true;
     for (int i = 0; i < len; i++) {
@@ -19,7 +21,7 @@ bool safe_inp(double *arr[], int len, double err){
     }
     return rs;
 }
-bool safe_inp(double *x, double err){
+bool safe_inp(double* x, double err) {
     double n;
     if (!(std::wcin >> n)) {
         std::wcin.clear();
@@ -32,7 +34,7 @@ bool safe_inp(double *x, double err){
         return true;
     }
 }
-bool safe_inp(int *arr[], int len, int err){
+bool safe_inp(int* arr[], int len, int err) {
     int n;
     bool rs = true;
     for (int i = 0; i < len; i++) {
@@ -48,7 +50,7 @@ bool safe_inp(int *arr[], int len, int err){
     }
     return rs;
 }
-bool safe_inp(int *x, int err = -1){
+bool safe_inp(int* x, int err = -1) {
     int n;
     if (!(std::wcin >> n)) {
         std::wcin.clear();
@@ -57,7 +59,7 @@ bool safe_inp(int *x, int err = -1){
         return false;
     }
     else {
-       *x = n;
+        *x = n;
         return true;
     }
 }
@@ -67,7 +69,7 @@ void tocifr() {
     out.open("cifri.txt");
     double n;
     for (int i = 0; i < 10; i++) {
-        safe_inp(&n,0);
+        safe_inp(&n, 0);
         out << n << std::endl;
     }
     out.close();
@@ -88,7 +90,7 @@ void tocifr() {
 }
 void znak() {
     double n;
-    if (!safe_inp(&n,-1)){
+    if (!safe_inp(&n, -1)) {
         std::wcout << L"Неверный ввод" << std::endl;
         return;
     }
@@ -104,37 +106,96 @@ void znak() {
 }
 void rect() {
     double a, b;
-    double *ab[] = {&a,&b};
-    if (!safe_inp(ab,2,-1)) {
+    double* ab[] = { &a,&b };
+    std::wcout << L"Введите длину и ширину" << std::endl;
+    if (!safe_inp(ab, 2, -1)) {
         std::wcout << L"Неверный ввод" << std::endl;
         return;
     }
-    std::wcout << L"S = "<< a*b << std::endl;
+    std::wcout << L"S = " << a * b << std::endl;
 }
 void tri() {
-    double a, b, c;
-    double *abc[] = {&a,&b,&c};
-    if (!safe_inp(abc,3,-1) or a <= 0 or b <= 0 or c <= 0) {
-        std::wcout << L"Неверный ввод" << std::endl;
-        return;
-    }
-    if ((a + b > c) and (a + c > b) and (b + c > a)) {
-        double p = (a + b + c) / 2;
-        std::wcout << L"S = " << std::sqrt((p*(p-a)*(p-b)*(p-c))) << std::endl;
-    }
-    else {
-        std::wcout << L"Неверный ввод" << std::endl;
+
+    while (true) {
+        std::wcout << L"Формулу площади:\n1.По трём сторонам\n2.По двум сторонам и углу между ними\n3.По стороне и высоте к ней\n4.По стороне и двум прилежащим углам" << std::endl;
+        int n;
+        if (!(std::wcin >> n)) {
+            std::wcin.clear();
+            std::wcin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::wcout << L"Неверный ввод" << std::endl;
+            continue;
+        }
+        else {
+            if (n == 1) {
+                double a, b, c;
+                double* abc[] = { &a,&b,&c };
+                std::wcout << L"Введите длины сторон" << std::endl;
+                if (!safe_inp(abc, 3, -1) or a <= 0 or b <= 0 or c <= 0) {
+                    std::wcout << L"Неверный ввод" << std::endl;
+                    return;
+                }
+                if ((a + b > c) and (a + c > b) and (b + c > a)) {
+                    double p = (a + b + c) / 2;
+                    std::wcout << L"S = " << std::sqrt((p * (p - a) * (p - b) * (p - c))) << std::endl;
+                }
+                else {
+                    std::wcout << L"Неверный ввод" << std::endl;
+                }
+                break;
+            }
+            else if (n == 2) {
+                double a, b, c;
+                double* abc[] = { &a,&b,&c };
+                std::wcout << L"Введите длины сторон и угол в градусах" << std::endl;
+                if (!safe_inp(abc, 3, -1) or a <= 0 or b <= 0 or c <= 0 or c >= 180) {
+                    std::wcout << L"Неверный ввод" << std::endl;
+                    return;
+                }
+                c = (c * 3.14) / 180;
+                std::wcout << L"S = " << 0.5*a*b*sin(c) << std::endl;
+                break;
+            }
+            else if (n == 3) {
+                double a, b;
+                double* abc[] = { &a,&b};
+                std::wcout << L"Введите длины сторон и угол в градусах" << std::endl;
+                if (!safe_inp(abc, 3, -1) or a <= 0 or b <= 0) {
+                    std::wcout << L"Неверный ввод" << std::endl;
+                    return;
+                }
+                std::wcout << L"S = " << 0.5 * a * b << std::endl;
+                break;
+            }
+            else if (n == 4) {
+                double a, b, c;
+                double* abc[] = { &a,&b,&c };
+                std::wcout << L"Введите длину стороны величины углов в градусах" << std::endl;
+                if (!safe_inp(abc, 3, -1) or a <= 0 or b >= 180 or c <= 0 or c >= 180) {
+                    std::wcout << L"Неверный ввод" << std::endl;
+                    return;
+                }
+                b = (b * 3.14) / 180;
+                c = (c * 3.14) / 180;
+                std::wcout << L"S = " << a*a*sin(b)*sin(c)/(2*sin(b+c)) << std::endl;
+                break;
+            }
+            else {
+                std::wcout << L"Неверный ввод" << std::endl;
+                continue;
+            }
+        }
     }
 }
 void okr() {
     const double PI = 3.14;
     double r;
-    if (!safe_inp(&r,-1) or r <= 0) {
+    std::wcout << L"Введите радиус" << std::endl;
+    if (!safe_inp(&r, -1) or r <= 0) {
         std::wcout << L"Неверный ввод" << std::endl;
         return;
     }
     else {
-        std::wcout << L"S = " << PI*r*r << std::endl;
+        std::wcout << L"S = " << PI * r * r << std::endl;
     }
 }
 void geometry() {
@@ -149,94 +210,95 @@ void geometry() {
         }
         else {
             if (n == 1) {
-            rect();
-            break;
-        }
-        else if (n == 2) {
-            tri();
-            break;
-        }
-        else if (n == 3) {
-            okr();
-            break;
-        }
-        else {
-            std::wcout << L"Неверный ввод" << std::endl;
-            continue;
+                rect();
+                break;
+            }
+            else if (n == 2) {
+                tri();
+                break;
+            }
+            else if (n == 3) {
+                okr();
+                break;
+            }
+            else {
+                std::wcout << L"Неверный ввод" << std::endl;
+                continue;
             }
         }
     }
 }
 void murica() {
-    for (int i = 0;i<13;i++){
-        if (i>0 and i<7){
-            if (i%2==0){
+    for (int i = 0; i < 13; i++) {
+        if (i > 0 and i < 7) {
+            if (i % 2 == 0) {
                 std::wcout << L"********████████████████████████████████████████" << std::endl;
             }
-            else{
+            else {
                 std::wcout << L"********░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░" << std::endl;
             }
-        }else{
-            if (i%2==0){
+        }
+        else {
+            if (i % 2 == 0) {
                 std::wcout << L"████████████████████████████████████████████████" << std::endl;
             }
-            else{
+            else {
                 std::wcout << L"░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░" << std::endl;
             }
         }
     }
 }
-void sinus(int leng, double step){
-    wchar_t cords[20+1][leng];
+void sinus(double step) {
+    wchar_t cords[20 + 1][100];
     float num = 0;
-    for (int i = 0; i<leng; i++){
-        int sn = round(20/2) - std::round(sin(num)*10);
+    for (int i = 0; i < 100; i++) {
+        int sn = round(20 / 2) - std::round(sin(num) * 10);
         cords[sn][i] = '*';
         num += step;
     }
-    for (int i = 0; i<20+1; i++){
-        for (int j = 0; j<leng; j++){
-            if (cords[i][j] == '*'){
+    for (int i = 0; i < 20 + 1; i++) {
+        for (int j = 0; j < 100; j++) {
+            if (cords[i][j] == '*') {
                 std::wcout << cords[i][j];
             }
-            else{
-                if (j == 0){
-                    if (i == 0){
-                        std::wcout << '^';
+            else {
+                if (j == 0) {
+                    if (i == 0) {
+                        std::wcout << L'^';
                     }
                     else {
-                        std::wcout << '|';
+                        std::wcout << L'|';
                     }
                 }
-                else if (i == 10){
-                    if (j == leng-1){
-                        std::wcout << '>';
+                else if (i == 10) {
+                    if (j == 100 - 1) {
+                        std::wcout << L'>';
                     }
-                    else{
-                        std::wcout << '-';
+                    else {
+                        std::wcout << L'-';
                     }
                 }
-                else{
-                    std::wcout << ' ';
+                else {
+                    std::wcout << L' ';
                 }
             }
         }
         std::wcout << std::endl;
     }
 }
-void rimHelp(int *sum, int *pool, int num, int *prev){
-    if (*prev == 0){
+void rimHelp(int* sum, int* pool, int num, int* prev) {
+    if (*prev == 0) {
         *prev = num;
     }
-    if (*prev < num){
+    if (*prev < num) {
         *sum = *sum - *pool + num - *pool;
         *pool = 0;
     }
-    else if (*prev == num){
+    else if (*prev == num) {
         *sum += num;
         *pool += num;
     }
-    else{
+    else {
         *pool = 0;
         *sum += num;
         *pool += num;
@@ -244,11 +306,16 @@ void rimHelp(int *sum, int *pool, int num, int *prev){
     *prev = num;
 }
 void rim(std::wstring s) {
+    static const std::wregex r(LR"((.*[^I^V^X^L^C^D^M].*)||(.*[IXCM]{4}.*)||(.*[VLD]{2}.*))");
+    if (std::regex_match(s,  r)){
+        std::wcout << L"Неверный ввод" << std::endl;
+        return;
+    }
     int pool = 0;
     int sum = 0;
     int prev = 0;
-    for (wchar_t a : s){
-        switch (a){
+    for (wchar_t a : s) {
+        switch (a) {
             case 'I':
                 rimHelp(&sum, &pool, 1, &prev);
                 break;
@@ -274,18 +341,48 @@ void rim(std::wstring s) {
                 break;
         }
     }
-    std::wcout << sum;
+    std::wcout << sum << std::endl;
+}
+int myrand(int m, int b, int c, int i) {
+    if (i == 0) {
+        return b%c;
+    }
+    return (m * myrand(m, b, c, i - 1) + b)%c;
+}
+void multRow(double a[], double b[], int len, double *res[]) {
+    for (int i = 0; i < len; i++) {
+        *res[i] = a[i]*b[i];
+    }
+}
+void matrix() {
+    double tovar[3][4] = {
+            {5,2,0,10},
+            {3,5,2,5},
+            {20,0,0,0}
+    };
+    double price[4] = {1.20, 2.80, 5.00, 2.00};
+    double comiss[4] = {0.50, 0.40, 1.00, 1.50};
+    double res[6][4] = { { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }};
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 4; j++) {
+            res[i][j] = tovar[i][j] * price[j];
+            res[i+3][j] = tovar[i][j] * comiss[j];
+        }
+    }
 }
 int main() {
-    setlocale(LC_ALL, "");
+    setlocale(0, "");
+
     tocifr();
     znak();
     geometry();
     murica();
-    sinus(100,3.14/16);
+    sinus(3.14 / 16);
     std::wstring s;
     std::wcin >> s;
     rim(s);
+    std::wcout << myrand(37, 3, 64, 8) << std::endl;
+    std::wcout << myrand(25137, 13849, 65537, 8) << std::endl;
 
     return 0;
 }

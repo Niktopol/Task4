@@ -349,10 +349,31 @@ int myrand(int m, int b, int c, int i) {
     }
     return (m * myrand(m, b, c, i - 1) + b)%c;
 }
-void multRow(double a[], double b[], int len, double *res[]) {
+double multix(double a[], double b[], int len) {
+    double sum = 0;
     for (int i = 0; i < len; i++) {
-        *res[i] = a[i]*b[i];
+        sum += a[i]*b[i];
     }
+    return sum;
+}
+int fnd(double arr[], bool t){
+    int a = 0;
+    double pool = arr[0];
+    if(t){;
+        for (int i = 0; i < 3; i++) {
+            if (arr[i] < pool){
+                a = i;
+            }
+        }
+    }
+    else{
+        for (int i = 0; i < 3; i++) {
+            if (arr[i] > pool){
+                a = i;
+            }
+        }
+    }
+    return a+1;
 }
 void matrix() {
     double tovar[3][4] = {
@@ -360,15 +381,26 @@ void matrix() {
             {3,5,2,5},
             {20,0,0,0}
     };
-    double price[4] = {1.20, 2.80, 5.00, 2.00};
-    double comiss[4] = {0.50, 0.40, 1.00, 1.50};
-    double res[6][4] = { { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }, { 0,0,0,0 }};
+    double price[2][4] = {{1.2,2.8,5,2},{0.5,0.4,1,1.5}};
+
+    double res[3][2] = { { 0,0 }, { 0,0 }, { 0,0 }};
     for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 4; j++) {
-            res[i][j] = tovar[i][j] * price[j];
-            res[i+3][j] = tovar[i][j] * comiss[j];
+        for (int j = 0; j < 2; j++) {
+            res[i][j] = multix(tovar[i],price[j],4);
         }
     }
+    double msum[3], mkom[3], sum, kom;
+    for (int i = 0; i < 3; i++) {
+        msum[i] = res[i][0];
+        sum += res[i][0];
+        mkom[i] = res[i][1];
+        kom += res[i][1];
+    }
+    std::wcout << fnd(msum, false) << " " << fnd(msum, true) << std::endl;
+    std::wcout << fnd(mkom, false) << " " << fnd(mkom, true) << std::endl;
+    std::wcout << sum << std::endl;
+    std::wcout << kom << std::endl;
+    std::wcout << sum-kom << std::endl;
 }
 int main() {
     setlocale(0, "");
@@ -383,6 +415,6 @@ int main() {
     rim(s);
     std::wcout << myrand(37, 3, 64, 8) << std::endl;
     std::wcout << myrand(25137, 13849, 65537, 8) << std::endl;
-
+    matrix();
     return 0;
 }

@@ -64,6 +64,7 @@ bool safe_inp(int* x, int err = -1) {
     }
 }
 void tocifr() {
+    std::wcout << L"Ведите 10 чисел" << std::endl;
     std::wifstream in;
     std::wofstream out;
     out.open("cifri.txt");
@@ -89,6 +90,7 @@ void tocifr() {
     std::wcout << sum << std::endl;
 }
 void znak() {
+    std::wcout << L"Ведите число" << std::endl;
     double n;
     if (!safe_inp(&n, -1)) {
         std::wcout << L"Неверный ввод" << std::endl;
@@ -152,12 +154,12 @@ void tri() {
                     return;
                 }
                 c = (c * 3.14) / 180;
-                std::wcout << L"S = " << 0.5*a*b*sin(c) << std::endl;
+                std::wcout << L"S = " << 0.5 * a * b * sin(c) << std::endl;
                 break;
             }
             else if (n == 3) {
                 double a, b;
-                double* abc[] = { &a,&b};
+                double* abc[] = { &a,&b };
                 std::wcout << L"Введите длины сторон и угол в градусах" << std::endl;
                 if (!safe_inp(abc, 3, -1) or a <= 0 or b <= 0) {
                     std::wcout << L"Неверный ввод" << std::endl;
@@ -176,7 +178,7 @@ void tri() {
                 }
                 b = (b * 3.14) / 180;
                 c = (c * 3.14) / 180;
-                std::wcout << L"S = " << a*a*sin(b)*sin(c)/(2*sin(b+c)) << std::endl;
+                std::wcout << L"S = " << a * a * sin(b) * sin(c) / (2 * sin(b + c)) << std::endl;
                 break;
             }
             else {
@@ -307,7 +309,7 @@ void rimHelp(int* sum, int* pool, int num, int* prev) {
 }
 void rim(std::wstring s) {
     static const std::wregex r(LR"((.*[^I^V^X^L^C^D^M].*)||(.*[IXCM]{4}.*)||(.*[VLD]{2}.*))");
-    if (std::regex_match(s,  r)){
+    if (std::regex_match(s, r)) {
         std::wcout << L"Неверный ввод" << std::endl;
         return;
     }
@@ -345,35 +347,36 @@ void rim(std::wstring s) {
 }
 int myrand(int m, int b, int c, int i) {
     if (i == 0) {
-        return b%c;
+        return b % c;
     }
-    return (m * myrand(m, b, c, i - 1) + b)%c;
+    return (m * myrand(m, b, c, i - 1) + b) % c;
 }
 double multix(double a[], double b[], int len) {
     double sum = 0;
     for (int i = 0; i < len; i++) {
-        sum += a[i]*b[i];
+        sum += a[i] * b[i];
     }
     return sum;
 }
-int fnd(double arr[], bool t){
+int fnd(double arr[], bool t) {
     int a = 0;
     double pool = arr[0];
-    if(t){;
+    if (t) {
+        ;
         for (int i = 0; i < 3; i++) {
-            if (arr[i] < pool){
+            if (arr[i] < pool) {
                 a = i;
             }
         }
     }
-    else{
+    else {
         for (int i = 0; i < 3; i++) {
-            if (arr[i] > pool){
+            if (arr[i] > pool) {
                 a = i;
             }
         }
     }
-    return a+1;
+    return a + 1;
 }
 void matrix() {
     double tovar[3][4] = {
@@ -381,15 +384,15 @@ void matrix() {
             {3,5,2,5},
             {20,0,0,0}
     };
-    double price[2][4] = {{1.2,2.8,5,2},{0.5,0.4,1,1.5}};
+    double price[2][4] = { {1.2,2.8,5,2},{0.5,0.4,1,1.5} };
 
-    double res[3][2] = { { 0,0 }, { 0,0 }, { 0,0 }};
+    double res[3][2] = { { 0,0 }, { 0,0 }, { 0,0 } };
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 2; j++) {
-            res[i][j] = multix(tovar[i],price[j],4);
+            res[i][j] = multix(tovar[i], price[j], 4);
         }
     }
-    double msum[3], mkom[3], sum, kom;
+    double msum[3], mkom[3], sum = 0, kom = 0;
     for (int i = 0; i < 3; i++) {
         msum[i] = res[i][0];
         sum += res[i][0];
@@ -400,21 +403,80 @@ void matrix() {
     std::wcout << fnd(mkom, false) << " " << fnd(mkom, true) << std::endl;
     std::wcout << sum << std::endl;
     std::wcout << kom << std::endl;
-    std::wcout << sum-kom << std::endl;
+    std::wcout << sum + kom << std::endl;
+}
+int find(wchar_t a, int f) {
+    a = towlower(a);
+    std::wstring s = L"0123456789abcdefghijklmnopqrstuvwxyz";
+    s = s.substr(0, f);
+    int p = 0;
+    for (wchar_t sym : s) {
+        if (sym == a) {
+            return p;
+        }
+        p += 1;
+    }
+    return -1;
+}
+wchar_t find(int a) {
+    std::wstring s = L"0123456789abcdefghijklmnopqrstuvwxyz";
+    return s[a];
+}
+void sisch(int a, int b) {
+    if (a > 1 and b > 1 and a <= 36 and b <= 36) {
+        int sum = 0;
+        std::wstring s;
+        std::wcin >> s;
+        int len = s.length();
+        int t = 0;
+        for (wchar_t sym : s) {
+            t = find(sym, a);
+            if (t < 0) {
+                std::wcout << L"Неверный ввод" << std::endl;
+                return;
+            }
+            sum += t * (pow(a, len - 1));
+            len -= 1;
+        }
+        s = L"";
+        while (sum > 0) {
+            s = find(sum % b) + s;
+            sum /= b;
+        }
+        std::wcout << s << std::endl;
+    }
+    else {
+        std::wcout << L"Неверный ввод" << std::endl;
+    }
 }
 int main() {
     setlocale(0, "");
 
     tocifr();
+
     znak();
+
     geometry();
+
     murica();
+
     sinus(3.14 / 16);
+
+    std::wcout << L"Ведите римское число" << std::endl;
     std::wstring s;
     std::wcin >> s;
     rim(s);
+
     std::wcout << myrand(37, 3, 64, 8) << std::endl;
     std::wcout << myrand(25137, 13849, 65537, 8) << std::endl;
+
     matrix();
+
+    std::wcout << L"Введите изначальную и конечную системы счисления" << std::endl;
+    int a, b;
+    int* c[] = { &a,&b };
+    safe_inp(c, 2, -1);
+    sisch(a, b);
+
     return 0;
 }

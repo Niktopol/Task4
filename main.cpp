@@ -308,7 +308,7 @@ void rimHelp(int* sum, int* pool, int num, int* prev) {
     *prev = num;
 }
 void rim(std::wstring s) {
-    static const std::wregex r(LR"((.*[^I^V^X^L^C^D^M].*)||(.*[IXCM]{4}.*)||(.*[VLD]{2}.*))");
+    static const std::wregex r(LR"((.*[^I^V^X^L^C^D^M].*)||(.*[IXCM]{4}.*)||(.*[VLD]{2}.*)||(.*[IVXLC][M].*)||(.*[IVXL][D].*)||(.*[IVX][C].*)||(.*[IV][L].*)||(.*[I][X].*))");
     if (std::regex_match(s, r)) {
         std::wcout << L"Неверный ввод" << std::endl;
         return;

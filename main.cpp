@@ -252,38 +252,37 @@ void murica() {
 }
 void sinus(double step) {
     wchar_t cords[20 + 1][100];
+    for (int i = 0; i < 20 + 1; i++) {
+        for (int j = 0; j < 100; j++) {
+            if (j == 0) {
+                if (i == 0) {
+                    cords[i][j] = L'^';
+                }
+                else {
+                    cords[i][j] = L'|';
+                }
+            }
+            else if (i == 10) {
+                if (j == 100 - 1) {
+                    cords[i][j] = L'>';
+                }
+                else {
+                    cords[i][j] = L'-';
+                }
+            }else {
+                cords[i][j] = L' ';
+            }
+        }
+    }
     float num = 0;
     for (int i = 0; i < 100; i++) {
-        int sn = round(20 / 2) - std::round(sin(num) * 10);
-        cords[sn][i] = '*';
+        int sn = 10 - std::floor(sin(num) * 10);
+        cords[sn][i] = L'*';
         num += step;
     }
     for (int i = 0; i < 20 + 1; i++) {
         for (int j = 0; j < 100; j++) {
-            if (cords[i][j] == '*') {
-                std::wcout << cords[i][j];
-            }
-            else {
-                if (j == 0) {
-                    if (i == 0) {
-                        std::wcout << L'^';
-                    }
-                    else {
-                        std::wcout << L'|';
-                    }
-                }
-                else if (i == 10) {
-                    if (j == 100 - 1) {
-                        std::wcout << L'>';
-                    }
-                    else {
-                        std::wcout << L'-';
-                    }
-                }
-                else {
-                    std::wcout << L' ';
-                }
-            }
+            std::wcout << cords[i][j];
         }
         std::wcout << std::endl;
     }
@@ -307,8 +306,11 @@ void rimHelp(int* sum, int* pool, int num, int* prev) {
     }
     *prev = num;
 }
-void rim(std::wstring s) {
-    static const std::wregex r(LR"((.*[^I^V^X^L^C^D^M].*)||(.*[IXCM]{4}.*)||(.*[VLD]{2}.*)||(.*[IVXLC][M].*)||(.*[IVXL][D].*)||(.*[IVX][C].*)||(.*[IV][L].*)||(.*[I][X].*))");
+void rim() {
+    std::wcout << L"Ведите римское число" << std::endl;
+    std::wstring s;
+    std::wcin >> s;
+    static const std::wregex r(LR"((.*[^I^V^X^L^C^D^M].*)||(.*[IXCM]{4}.*)||(.*[VLD]{2}.*)||(.*[IVXLCD][M].*)||(.*[IVXL][D].*)||(.*[IVXL][C].*)||(.*[IV][L].*)||(.*[V][X].*))");
     if (std::regex_match(s, r)) {
         std::wcout << L"Неверный ввод" << std::endl;
         return;
@@ -362,7 +364,6 @@ int fnd(double arr[], bool t) {
     int a = 0;
     double pool = arr[0];
     if (t) {
-        ;
         for (int i = 0; i < 3; i++) {
             if (arr[i] < pool) {
                 a = i;
@@ -422,61 +423,95 @@ wchar_t find(int a) {
     std::wstring s = L"0123456789abcdefghijklmnopqrstuvwxyz";
     return s[a];
 }
-void sisch(int a, int b) {
-    if (a > 1 and b > 1 and a <= 36 and b <= 36) {
-        int sum = 0;
-        std::wstring s;
-        std::wcin >> s;
-        int len = s.length();
-        int t = 0;
-        for (wchar_t sym : s) {
-            t = find(sym, a);
-            if (t < 0) {
-                std::wcout << L"Неверный ввод" << std::endl;
-                return;
-            }
-            sum += t * (pow(a, len - 1));
-            len -= 1;
-        }
-        s = L"";
-        while (sum > 0) {
-            s = find(sum % b) + s;
-            sum /= b;
-        }
-        std::wcout << s << std::endl;
-    }
-    else {
-        std::wcout << L"Неверный ввод" << std::endl;
-    }
-}
-int main() {
-    setlocale(0, "");
-
-    tocifr();
-
-    znak();
-
-    geometry();
-
-    murica();
-
-    sinus(3.14 / 16);
-
-    std::wcout << L"Ведите римское число" << std::endl;
-    std::wstring s;
-    std::wcin >> s;
-    rim(s);
-
-    std::wcout << myrand(37, 3, 64, 8) << std::endl;
-    std::wcout << myrand(25137, 13849, 65537, 8) << std::endl;
-
-    matrix();
-
+void sisch() {
     std::wcout << L"Введите изначальную и конечную системы счисления" << std::endl;
     int a, b;
     int* c[] = { &a,&b };
     safe_inp(c, 2, -1);
-    sisch(a, b);
-
-    return 0;
+    if (a > 1 and b > 1 and a <= 36 and b <= 36) {
+        int sum = 0;
+        std::wstring s;
+        wchar_t zn = L' ';
+        std::wcin >> s;
+        int len = s.length();
+        if (len > 0){
+            if (s[0] == L'-'){
+                zn = s[0];
+                s = (std::wstring)s.substr(1,len-1);
+                len -= 1;
+            }
+            int t = 0;
+            for (wchar_t sym : s) {
+                t = find(sym, a);
+                if (t < 0) {
+                    std::wcout << L"Неверный ввод" << std::endl;
+                    return;
+                }
+                sum += t * (pow(a, len - 1));
+                len -= 1;
+            }
+            s = L"";
+            while (sum > 0) {
+                s = find(sum % b) + s;
+                sum /= b;
+            }
+            std::wcout << zn + s << std::endl;
+            return;
+        }
+    }
+    std::wcout << L"Неверный ввод" << std::endl;
+}
+int main() {
+    setlocale(0, "");
+    int a = 0;
+    double b = 0;
+    while (true){
+        std::wcout << L"Введите номер задания" << std::endl;
+        safe_inp(&a,-1);
+        switch (a) {
+            case 1:
+                tocifr();
+                break;
+            case 2:
+                znak();
+                break;
+            case 3:
+                geometry();
+                break;
+            case 4:
+                murica();
+                break;
+            case 5:
+                std::wcout << L"Введите длину единичного отрезка для оси X" << std::endl;
+                safe_inp(&b,-1);
+                if (b > 0){
+                    sinus(b);
+                }else{
+                    std::wcout << L"Неверный ввод" << std::endl;
+                }
+                break;
+            case 6:
+                rim();
+                break;
+            case 7:
+                std::wcout << L"Введите глубину рекурсии" << std::endl;
+                safe_inp(&a,-1);
+                if (a > 0){
+                    std::wcout << myrand(37, 3, 64, a) << std::endl;
+                    std::wcout << myrand(25137, 13849, 65537, a) << std::endl;
+                } else {
+                    std::wcout << L"Неверный ввод" << std::endl;
+                }
+                break;
+            case 8:
+                matrix();
+                break;
+            case 9:
+                sisch();
+                break;
+            default:
+                std::wcout << L"Неверный ввод" << std::endl;
+                continue;
+        }
+    }
 }

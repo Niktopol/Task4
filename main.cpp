@@ -310,42 +310,44 @@ void rim() {
     std::wcout << L"Ведите римское число" << std::endl;
     std::wstring s;
     std::wcin >> s;
-    static const std::wregex r(LR"((.*[^I^V^X^L^C^D^M].*)||(.*[IXCM]{4}.*)||(.*[VLD]{2}.*)||(.*[IVXLCD][M].*)||(.*[IVXL][D].*)||(.*[IVXL][C].*)||(.*[IV][L].*)||(.*[V][X].*))");
-    if (std::regex_match(s, r)) {
-        std::wcout << L"Неверный ввод" << std::endl;
-        return;
-    }
-    int pool = 0;
-    int sum = 0;
-    int prev = 0;
-    for (wchar_t a : s) {
-        switch (a) {
-            case 'I':
-                rimHelp(&sum, &pool, 1, &prev);
-                break;
-            case 'V':
-                rimHelp(&sum, &pool, 5, &prev);
-                break;
-            case 'X':
-                rimHelp(&sum, &pool, 10, &prev);
-                break;
-            case 'L':
-                rimHelp(&sum, &pool, 50, &prev);
-                break;
-            case 'C':
-                rimHelp(&sum, &pool, 100, &prev);
-                break;
-            case 'D':
-                rimHelp(&sum, &pool, 500, &prev);
-                break;
-            case 'M':
-                rimHelp(&sum, &pool, 1000, &prev);
-                break;
-            default:
-                break;
+    static const std::wregex rr(LR"(^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$)");
+    if (std::regex_match(s, rr)) {
+        int pool = 0;
+        int sum = 0;
+        int prev = 0;
+        for (wchar_t a: s) {
+            switch (a) {
+                case 'I':
+                    rimHelp(&sum, &pool, 1, &prev);
+                    break;
+                case 'V':
+                    rimHelp(&sum, &pool, 5, &prev);
+                    break;
+                case 'X':
+                    rimHelp(&sum, &pool, 10, &prev);
+                    break;
+                case 'L':
+                    rimHelp(&sum, &pool, 50, &prev);
+                    break;
+                case 'C':
+                    rimHelp(&sum, &pool, 100, &prev);
+                    break;
+                case 'D':
+                    rimHelp(&sum, &pool, 500, &prev);
+                    break;
+                case 'M':
+                    rimHelp(&sum, &pool, 1000, &prev);
+                    break;
+                default:
+                    std::wcout << L"Неверный ввод" << std::endl;
+                    return;
+                    break;
+            }
         }
+        std::wcout << sum << std::endl;
+    }else{
+        std::wcout << L"Неверный ввод" << std::endl;
     }
-    std::wcout << sum << std::endl;
 }
 int myrand(int m, int b, int c, int i) {
     if (i == 0) {
@@ -400,11 +402,11 @@ void matrix() {
         mkom[i] = res[i][1];
         kom += res[i][1];
     }
-    std::wcout << fnd(msum, false) << " " << fnd(msum, true) << std::endl;
-    std::wcout << fnd(mkom, false) << " " << fnd(mkom, true) << std::endl;
-    std::wcout << sum << std::endl;
-    std::wcout << kom << std::endl;
-    std::wcout << sum + kom << std::endl;
+    std::wcout << L"Больше всего получил с продажи: " << fnd(msum, false) << L" Меньше всего получил с продажи: "  << fnd(msum, true) << std::endl;
+    std::wcout << L"Больше всего получил комиссионных: " << fnd(mkom, false) << L" Меньше всего получил комиссионных: " << fnd(mkom, true) << std::endl;
+    std::wcout << L"Сумма денег за проданные товары: " << sum << std::endl;
+    std::wcout << L"Комиссионных за проданные товары: " << kom << std::endl;
+    std::wcout << L"Прошло денег через продавцов: " << sum + kom << std::endl;
 }
 int find(wchar_t a, int f) {
     a = towlower(a);
@@ -496,7 +498,7 @@ int main() {
             case 7:
                 std::wcout << L"Введите глубину рекурсии" << std::endl;
                 safe_inp(&a,-1);
-                if (a > 0){
+                if (a > 0 and a < 500){
                     std::wcout << myrand(37, 3, 64, a) << std::endl;
                     std::wcout << myrand(25137, 13849, 65537, a) << std::endl;
                 } else {
@@ -511,7 +513,6 @@ int main() {
                 break;
             default:
                 std::wcout << L"Неверный ввод" << std::endl;
-                continue;
         }
     }
 }
